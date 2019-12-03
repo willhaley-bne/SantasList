@@ -43,7 +43,15 @@
 
     export default {
         name: 'App',
-        mounted: function () {},
+        mounted: function () {
+            var temp = new URLSearchParams(window.location.search)
+            if (temp.get('kids')) {
+                this.always_nice = true
+            }
+            if (temp.get('naughty')) {
+                this.always_naughty = true
+            }
+        },
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
@@ -54,7 +62,9 @@
                 devices: [],
                 countdown: 5,
                 first_device: true,
-                number: 0
+                number: 0,
+                always_nice: false,
+                always_naughty: false
             }
         },
         methods: {
@@ -65,6 +75,15 @@
                     if (self.countdown > 0) {
                         self.tick_tock()
                     } else {
+                        if (self.always_nice) {
+                            self.check_the_list_two()
+                            return
+                        }
+                        if (self.always_naughty) {
+                            self.check_the_list_three()
+                            return
+                        }
+                        return
                         self.number = Math.floor(Math.random() * 11);
                         if (self.number == 9) {
                             self.check_the_list_three()
