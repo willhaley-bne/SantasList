@@ -27,9 +27,11 @@
           </span>
           <span v-if="checking_the_list==2">
             <img :src="img" class="img-rounded">
+            {{number}}
           </span>
           <span v-if="checking_the_list==3">
             <img :src="img" class="img-rounded">
+            {{number}}
           </span>
         </b-col>
       </b-row>
@@ -50,7 +52,8 @@
                 deviceId: null,
                 devices: [],
                 countdown: 10,
-                first_device: true
+                first_device: true,
+                number: 0
             }
         },
         methods: {
@@ -61,8 +64,8 @@
                     if (self.countdown > 0) {
                         self.tick_tock()
                     } else {
-                        var number = Math.floor(Math.random() * 11);
-                        if (number===9){
+                        self.number = Math.floor(Math.random() * 11);
+                        if (self.number==9){
                             self.check_the_list_three()
                         } else {
                           self.check_the_list_two()
@@ -78,7 +81,7 @@
                 var self = this;
                 setTimeout(function () {
                     self.checking_the_list = 0;
-                    self.countdown = 10;
+                    self.countdown = 5;
                     self.$confetti.stop();
                 }, 10000)
             },
