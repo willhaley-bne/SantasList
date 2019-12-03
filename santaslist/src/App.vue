@@ -2,17 +2,35 @@
   <div id="app">
     <b-container>
       <b-row>
-        <b-col><img src="./assets/santa.jpg"></b-col>
-        <b-col>
-          <b-button v-if="checking_the_list==0" variant="success" size="lg" class="m-5" v-on:click="check_the_list">Found out Now!</b-button>
-          <div v-if="checking_the_list==1">
-            <h1>Using facial reconition (Santa's hi-tech now y'all)</h1>
+        <b-col md="6">
+          <span v-if="checking_the_list<2">
+            <img src="./assets/santa.jpg">
+          </span>
+          <span v-if="checking_the_list==2">
+            <h1>Congratulations!<br />  You're on the nice list!</h1>
+            <img src="./assets/santa-claus-christmas.png" class="img-responsive" width="517px">
+          </span>
+          <span v-if="checking_the_list==3">
+            <h1>Oh NO!<br />  You're on the naughty list!</h1>
+            <img src="./assets/coal.jpg" class="img-responsive">
+          </span>
+        </b-col>
+        <b-col  md="6">
+          <b-button v-if="checking_the_list==0" variant="success" size="lg" class="m-5" style="padding: 50px; font-size: 50px;" v-on:click="check_the_list">
+            Find Out Now!
+          </b-button>
+          <span v-if="checking_the_list==1">
+            <h1>Using facial recognition,<br /> we'll check the list... twice</h1>
             <h3>Smile, taking picture in {{countdown}}</h3>
             <vue-web-cam ref="webcam" width="100%" v-bind:selectFirstDevice="first_device"/>
-         </div>
-          <div v-if="checking_the_list==2">
-            <img :src="img">
-          </div>
+            <h3>(Santa is High Tech Y'all)</h3>
+          </span>
+          <span v-if="checking_the_list==2">
+            <img :src="img" class="img-rounded">
+          </span>
+          <span v-if="checking_the_list==3">
+            <img :src="img" class="img-rounded">
+          </span>
         </b-col>
       </b-row>
     </b-container>
@@ -39,27 +57,45 @@
             check_the_list: function (event) {
                 this.checking_the_list = 1
                 var self = this
-                setTimeout(function(){
-                    if(self.countdown > 0 ){
-                      self.tick_tock()
-                    }else{
-                        self.check_the_list_two()
+                setTimeout(function () {
+                    if (self.countdown > 0) {
+                        self.tick_tock()
+                    } else {
+                        var number = Math.floor(Math.random() * 11);
+                        if (number===9){
+                            self.check_the_list_three()
+                        } else {
+                          self.check_the_list_two()
+                        }
                     }
                 }, 1000)
             },
-            check_the_list_two: function(event){
-            console.log(this.$refs)
+            check_the_list_two: function () {
                 this.checking_the_list = 2;
                 this.img = this.$refs.webcam.capture()
-                console.log(this.img)
+                this.$confetti.start();
+
+                var self = this;
+                setTimeout(function () {
+                    self.checking_the_list = 0;
+                    self.countdown = 10;
+                    self.$confetti.stop();
+                }, 10000)
             },
-            tick_tock: function(){
-                console.log('asdf')
+            check_the_list_three: function () {
+                this.checking_the_list = 3;
+                this.img = this.$refs.webcam.capture()
+
+                var self = this;
+                setTimeout(function () {
+                    self.checking_the_list = 0;
+                    self.countdown = 10;
+                }, 10000)
+            },
+            tick_tock: function () {
                 this.countdown--
                 this.check_the_list()
             }
-        },
-        mounted: function(){
         }
     }
 </script>
