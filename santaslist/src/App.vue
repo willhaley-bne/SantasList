@@ -43,10 +43,7 @@
 
     export default {
         name: 'App',
-        mounted: function () {
-            this.confetti_yall()
-
-        },
+        mounted: function () {},
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
