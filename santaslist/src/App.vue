@@ -43,7 +43,10 @@
 
     export default {
         name: 'App',
-        mounted: function () {},
+        mounted: function () {
+            this.confetti_yall()
+
+        },
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
@@ -77,24 +80,7 @@
             check_the_list_two: function () {
                 this.checking_the_list = 2;
                 this.img = this.$refs.webcam.capture()
-            this.$confetti.start({
-                particles: [
-                    {
-                        type: 'image',
-                        url: 'https://ud.mybne.com/hardees-star.png'
-                    },
-                    {
-                        type: 'image',
-                        url: 'https://ud.mybne.com/hamburger.png'
-                    },
-{
-                        type: 'image',
-                        url: 'https://ud.mybne.com/santa-hat.png'
-                    },
-
-                ]
-            });
-
+                this.confetti_yall()
                 var self = this;
                 setTimeout(function () {
                     self.checking_the_list = 0;
@@ -115,6 +101,29 @@
             tick_tock: function () {
                 this.countdown--
                 this.check_the_list()
+            },
+            confetti_yall: function () {
+                this.$confetti.start({
+                    particles: [
+                        {
+                            type: 'image',
+                            url: 'https://ud.mybne.com/hardees-star.png'
+                        },
+                        {
+                            type: 'image',
+                            url: 'https://ud.mybne.com/hamburger.png'
+                        },
+                        {
+                            type: 'image',
+                            url: 'https://ud.mybne.com/santa-hat.png'
+                        },
+
+                    ],
+                    defaultSize: 25,
+                    defaultDropRate: 6,
+                    particlesPerFrame: 2
+                });
+
             }
         }
     }

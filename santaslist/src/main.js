@@ -10,7 +10,8 @@ import App from './App'
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(WebCam);
-Vue.use(VueConfetti)
+Vue.use(VueConfetti);
+
 
 /* eslint-disable no-new */
 new Vue({
