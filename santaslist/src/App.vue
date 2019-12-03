@@ -43,7 +43,7 @@
 
     export default {
         name: 'App',
-        mounted: function () {},
+        mounted: function () {this.confetti_yall()},
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
@@ -117,8 +117,8 @@
 
                     ],
                     defaultSize: 25,
-                    defaultDropRate: 6,
-                    particlesPerFrame: 2
+                    defaultDropRate: 8,
+                    particlesPerFrame: 1
                 });
 
             }
