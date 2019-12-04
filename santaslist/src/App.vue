@@ -83,7 +83,7 @@
                             self.check_the_list_three()
                             return
                         }
-                        return
+
                         self.number = Math.floor(Math.random() * 11);
                         if (self.number == 9) {
                             self.check_the_list_three()
