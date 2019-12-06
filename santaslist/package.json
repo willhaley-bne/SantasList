@@ -14,6 +14,7 @@
     "cloudinary-vue": "^1.0.0-beta3",
     "vue": "^2.5.2",
     "vue-confetti": "^2.0.5",
+    "vue-localstorage": "^0.6.2",
     "vue-resource": "^1.5.1",
     "vue-web-cam": "^1.9.0",
     "vuex": "^3.1.2"

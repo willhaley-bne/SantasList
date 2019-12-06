@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <b-container v-if="admin">
-      <b-button>Random</b-button>
-      <b-button variant="success">Always Nice</b-button>
-      <b-button variant="warning">Always Naughty</b-button>
+      <b-button @click="set_decision_status('random')"> Random</b-button>
+      <b-button @click="set_decision_status('nice')" variant="success"> Nice</b-button>
+      <b-button @click="set_decision_status('naughty')" variant="warning"> Naughty</b-button>
     </b-container>
     <b-container v-if="!admin">
       <b-row>
@@ -53,16 +53,27 @@
             if (temp.get('admin')) {
                 this.admin = true
             }
+            this.decision_state = this.$ls.get('decision_state', 'random')
+            if (this.decision_state.includes('nice')) {
+                this.state_queue = '!'
+            }
+            if (this.decision_state.includes('naughty')) {
+                this.state_queue = '?'
+            }
 
-            this.$http.get('https://santaslist.mybne.com/state.txt').then(response => {
-                this.decision_state = response.body
-                if (this.decision_state.includes('nice')) {
-                    this.state_queue = '!'
+            var self = this
+            setInterval(function () {
+                self.decision_state = self.$ls.get('decision_state', 'random')
+                if (self.decision_state.includes('random')) {
+                    self.state_queue = null
                 }
-                if (this.decision_state.includes('naughty')) {
-                    this.state_queue = '?'
+                if (self.decision_state.includes('nice')) {
+                    self.state_queue = '!'
                 }
-            })
+                if (self.decision_state.includes('naughty')) {
+                    self.state_queue = '?'
+                }
+            }, 1000)
         },
         data() {
             return {
@@ -81,41 +92,44 @@
             }
         },
         methods: {
+            set_decision_status: function (status) {
+                this.$ls.set('decision_state', status)
+            },
             check_the_list: function (event) {
-                this.$http.get('https://santaslist.mybne.com/state.txt').then(response => {
-                    this.decision_state = response.body
-                    if (this.decision_state.includes('nice')) {
-                        this.state_queue = '!'
-                    }
-                    if (this.decision_state.includes('naughty')) {
-                        this.state_queue = '?'
-                    }
-                    this.checking_the_list = 1
-                    var self = this;
-                    setTimeout(function () {
-                        if (self.countdown > 0) {
-                            self.tick_tock()
-                        } else {
+                if (this.decision_state.includes('random')) {
+                    this.state_queue = null
+                }
+                if (this.decision_state.includes('nice')) {
+                    this.state_queue = '!'
+                }
+                if (this.decision_state.includes('naughty')) {
+                    this.state_queue = '?'
+                }
+                this.checking_the_list = 1
+                var self = this;
+                setTimeout(function () {
+                    if (self.countdown > 0) {
+                        self.tick_tock()
+                    } else {
 
-                            if (self.decision_state == 'nice') {
-                                self.check_the_list_two()
-                                return
-                            }
-
-                            if (self.decision_state == 'naughty') {
-                                self.check_the_list_three()
-                                return
-                            }
-
-                            self.number = Math.floor(Math.random() * 11);
-                            if (self.number == 9) {
-                                self.check_the_list_three()
-                            } else {
-                                self.check_the_list_two()
-                            }
+                        if (self.decision_state == 'nice') {
+                            self.check_the_list_two()
+                            return
                         }
-                    }, 1000)
-                })
+
+                        if (self.decision_state == 'naughty') {
+                            self.check_the_list_three()
+                            return
+                        }
+
+                        self.number = Math.floor(Math.random() * 11);
+                        if (self.number == 9) {
+                            self.check_the_list_three()
+                        } else {
+                            self.check_the_list_two()
+                        }
+                    }
+                }, 1000)
             },
             check_the_list_two: function () {
                 this.checking_the_list = 2;
