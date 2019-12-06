@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <b-container>
+    <b-container v-if="admin">
+      <b-button>Random</b-button>
+      <b-button variant="success">Always Nice</b-button>
+      <b-button variant="warning">Always Naughty</b-button>
+    </b-container>
+    <b-container v-if="!admin">
       <b-row>
         <b-col md="6">
           <span v-if="checking_the_list<2">
@@ -18,7 +23,7 @@
         <b-col md="6">
           <b-button v-if="checking_the_list==0" variant="success" size="lg" class="m-5"
                     style="padding: 50px; font-size: 50px;" v-on:click="check_the_list">
-            Find Out Now!
+            Find Out Now{{state_queue}}
           </b-button>
           <span v-if="checking_the_list==1">
             <h1>Using facial recognition,<br/> we'll check the list... twice</h1>
@@ -45,12 +50,19 @@
         name: 'App',
         mounted: function () {
             var temp = new URLSearchParams(window.location.search)
-            if (temp.get('kids')) {
-                this.always_nice = true
+            if (temp.get('admin')) {
+                this.admin = true
             }
-            if (temp.get('naughty')) {
-                this.always_naughty = true
-            }
+
+            this.$http.get('https://santaslist.mybne.com/state.txt').then(response => {
+                this.decision_state = response.body
+                if (this.decision_state.includes('nice')) {
+                    this.state_queue = '!'
+                }
+                if (this.decision_state.includes('naughty')) {
+                    this.state_queue = '?'
+                }
+            })
         },
         data() {
             return {
@@ -63,35 +75,47 @@
                 countdown: 5,
                 first_device: true,
                 number: 0,
-                always_nice: false,
-                always_naughty: false
+                decision_state: false,
+                admin: false,
+                state_queue: null
             }
         },
         methods: {
             check_the_list: function (event) {
-                this.checking_the_list = 1
-                var self = this
-                setTimeout(function () {
-                    if (self.countdown > 0) {
-                        self.tick_tock()
-                    } else {
-                        if (self.always_nice) {
-                            self.check_the_list_two()
-                            return
-                        }
-                        if (self.always_naughty) {
-                            self.check_the_list_three()
-                            return
-                        }
-
-                        self.number = Math.floor(Math.random() * 11);
-                        if (self.number == 9) {
-                            self.check_the_list_three()
-                        } else {
-                            self.check_the_list_two()
-                        }
+                this.$http.get('https://santaslist.mybne.com/state.txt').then(response => {
+                    this.decision_state = response.body
+                    if (this.decision_state.includes('nice')) {
+                        this.state_queue = '!'
                     }
-                }, 1000)
+                    if (this.decision_state.includes('naughty')) {
+                        this.state_queue = '?'
+                    }
+                    this.checking_the_list = 1
+                    var self = this;
+                    setTimeout(function () {
+                        if (self.countdown > 0) {
+                            self.tick_tock()
+                        } else {
+
+                            if (self.decision_state == 'nice') {
+                                self.check_the_list_two()
+                                return
+                            }
+
+                            if (self.decision_state == 'naughty') {
+                                self.check_the_list_three()
+                                return
+                            }
+
+                            self.number = Math.floor(Math.random() * 11);
+                            if (self.number == 9) {
+                                self.check_the_list_three()
+                            } else {
+                                self.check_the_list_two()
+                            }
+                        }
+                    }, 1000)
+                })
             },
             check_the_list_two: function () {
                 this.checking_the_list = 2;
