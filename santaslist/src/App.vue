@@ -52,28 +52,10 @@
             var temp = new URLSearchParams(window.location.search)
             if (temp.get('admin')) {
                 this.admin = true
+            } else {
+              this.get_decision_state()
+              setInterval(this.get_decision_state, 10000)
             }
-            this.decision_state = this.$ls.get('decision_state', 'random')
-            if (this.decision_state.includes('nice')) {
-                this.state_queue = '!'
-            }
-            if (this.decision_state.includes('naughty')) {
-                this.state_queue = '?'
-            }
-
-            var self = this
-            setInterval(function () {
-                self.decision_state = self.$ls.get('decision_state', 'random')
-                if (self.decision_state.includes('random')) {
-                    self.state_queue = null
-                }
-                if (self.decision_state.includes('nice')) {
-                    self.state_queue = '!'
-                }
-                if (self.decision_state.includes('naughty')) {
-                    self.state_queue = '?'
-                }
-            }, 1000)
         },
         data() {
             return {
@@ -86,14 +68,31 @@
                 countdown: 5,
                 first_device: true,
                 number: 0,
-                decision_state: false,
+                decision_state: 'random',
                 admin: false,
-                state_queue: null
+                state_queue: null,
+                decision_id:null
             }
         },
         methods: {
-            set_decision_status: function (status) {
-                this.$ls.set('decision_state', status)
+            set_decision_status: function(new_state){
+                console.log(new_state)
+                this.$http.put('https://santaslist-ca30.restdb.io/rest/appstate', {"state": new_state})
+            },
+            get_decision_state: function () {
+                this.$http.get('https://santaslist-ca30.restdb.io/rest/appstate').then(response => {
+                    this.decision_id = response.body[0]._id
+                    this.decision_state = response.body[0].state
+                    if (this.decision_state.includes('random')) {
+                        this.state_queue = ''
+                    }
+                    if (this.decision_state.includes('nice')) {
+                        this.state_queue = '!'
+                    }
+                    if (this.decision_state.includes('naughty')) {
+                        this.state_queue = '?'
+                    }
+                })
             },
             check_the_list: function (event) {
                 if (this.decision_state.includes('random')) {

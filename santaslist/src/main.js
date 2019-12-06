@@ -5,14 +5,18 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import WebCam from 'vue-web-cam'
 import VueConfetti from 'vue-confetti'
-import VueLocalStorage from "vue-localstorage";
+import VueResource from 'vue-resource'
 import App from './App'
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(WebCam);
 Vue.use(VueConfetti);
-Vue.use(VueLocalStorage, {name: 'ls', bind: true})
+Vue.use(VueResource);
+
+Vue.http.headers.common['content-type'] = 'application/json'
+Vue.http.headers.common['x-apikey'] = '5deacf3f4658275ac9dc23e9'
+Vue.http.headers.common['cache-control'] = 'no-cache'
 
 
 /* eslint-disable no-new */
