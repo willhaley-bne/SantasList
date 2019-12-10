@@ -50,10 +50,10 @@
         name: 'App',
         mounted: function () {
             var temp = new URLSearchParams(window.location.search)
+            this.get_decision_state()
             if (temp.get('admin')) {
                 this.admin = true
             } else {
-              this.get_decision_state()
               setInterval(this.get_decision_state, 10000)
             }
         },
@@ -76,10 +76,15 @@
         },
         methods: {
             set_decision_status: function(new_state){
-                console.log(new_state)
-                this.$http.put('https://santaslist-ca30.restdb.io/rest/appstate', {"state": new_state})
+                this.$http.put('https://santaslist-ca30.restdb.io/rest/appstate/'+this.decision_id, {"state": new_state})
+                    .then(response=>{
+                        console.log(response)
+                    }, response=>{
+                        console.log(response)
+                    })
             },
             get_decision_state: function () {
+                console.log(this.decision_id)
                 this.$http.get('https://santaslist-ca30.restdb.io/rest/appstate').then(response => {
                     this.decision_id = response.body[0]._id
                     this.decision_state = response.body[0].state

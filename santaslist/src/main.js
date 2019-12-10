@@ -14,6 +14,8 @@ Vue.use(WebCam);
 Vue.use(VueConfetti);
 Vue.use(VueResource);
 
+//Vue.http.headers.common['access-control-allow-origin'] = 'http://localhost:8080'
+Vue.http.headers.common['Origin'] = 'http://localhost:8080'
 Vue.http.headers.common['content-type'] = 'application/json'
 Vue.http.headers.common['x-apikey'] = '5deacf3f4658275ac9dc23e9'
 Vue.http.headers.common['cache-control'] = 'no-cache'
