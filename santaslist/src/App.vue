@@ -1,9 +1,33 @@
 <template>
   <div id="app">
     <b-container v-if="admin">
-      <b-button @click="set_decision_status('random')"> Random</b-button>
-      <b-button @click="set_decision_status('nice')" variant="success"> Nice</b-button>
-      <b-button @click="set_decision_status('naughty')" variant="warning"> Naughty</b-button>
+      <b-row class="p-5">
+        <b-col class="text-center text-dark">
+          Current state is <span class="text-capitalize" style="font-style: italic">{{decision_state}}</span>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <b-button @click="set_decision_status('random')"> Random</b-button>
+        </b-col>
+        <b-col>
+        <b-button @click="set_decision_status('nice')" variant="success"> Nice</b-button>
+        </b-col>
+        <b-col>
+          <b-button @click="set_decision_status('naughty')" variant="warning"> Naughty</b-button>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          Nothing = Random
+        </b-col>
+        <b-col>
+          ! = Always Nice
+        </b-col>
+        <b-col>
+          ? = Always Naughty
+        </b-col>
+      </b-row>
     </b-container>
     <b-container v-if="!admin">
       <b-row>
